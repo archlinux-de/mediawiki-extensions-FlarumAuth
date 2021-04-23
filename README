@@ -1,0 +1,10 @@
+Enable this extension by adding this to LocalSettings.php:
+
+    wfLoadExtension('FlarumAuth');
+    $wgGroupPermissions['*']['createaccount'] = false;
+    $wgGroupPermissions['sysop']['createaccount'] = false;
+    $wgGroupPermissions['*']['autocreateaccount'] = true;
+
+Define the Flarum URL:
+
+    $wgFlarumUrl = 'https://flarum.example.com';

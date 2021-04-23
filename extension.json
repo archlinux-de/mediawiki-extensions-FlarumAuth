@@ -1,0 +1,36 @@
+{
+  "name": "FlarumAuth",
+  "author": [
+    "Pierre Schmitz"
+  ],
+  "url": "https://www.archlinux.de/",
+  "description": "Use Flarum accounts in MediaWiki",
+  "license-name": "GPL-3.0+",
+  "type": "other",
+  "AutoloadClasses": {
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumAuthenticationProvider": "FlarumAuthenticationProvider.php",
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUser": "FlarumUser.php",
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserToken": "FlarumUserToken.php"
+  },
+  "ConfigRegistry": {
+    "FlarumAuth": "GlobalVarConfig::newInstance"
+  },
+  "config": {
+    "FlarumUrl": {
+      "value": ""
+    }
+  },
+  "AuthManagerAutoConfig": {
+    "primaryauth": {
+      "FlarumAuthenticationProvider": {
+        "class": "MediaWiki\\Extensions\\FlarumAuth\\FlarumAuthenticationProvider"
+      }
+    }
+  },
+  "Hooks": {
+    "isValidPassword": [
+      "MediaWiki\\Extensions\\FlarumAuth\\FlarumAuthenticationProvider::isValidPassword"
+    ]
+  },
+  "manifest_version": 2
+}
