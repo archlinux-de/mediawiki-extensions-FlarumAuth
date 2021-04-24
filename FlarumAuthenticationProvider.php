@@ -27,7 +27,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         return MediaWikiServices::getInstance()
             ->getConfigFactory()
             ->makeConfig('FlarumAuth')
-            ->get("FlarumUrl");
+            ->get('FlarumUrl');
     }
 
     /**
@@ -148,8 +148,9 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
      */
     public function postAuthentication($user, AuthenticationResponse $response): void
     {
-        if ($user && $response->status === AuthenticationResponse::PASS && $this->flarumUser && $this->flarumUser->isEmailConfirmed(
-            )) {
+        if ($user && $response->status === AuthenticationResponse::PASS
+            && $this->flarumUser && $this->flarumUser->isEmailConfirmed()
+            && $response->username == $user->getName()) {
             $userUpdated = false;
 
             if ($user->getEmail() != $this->flarumUser->getEmail()) {
