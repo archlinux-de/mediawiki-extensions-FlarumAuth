@@ -45,7 +45,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
             return AuthenticationResponse::newAbstain();
         }
 
-        $client = new Client();
+        $client = new Client(['headers' => ['User-Agent' => 'MediaWiki']]);
         try {
             $res = $client->request(
                 'POST',
