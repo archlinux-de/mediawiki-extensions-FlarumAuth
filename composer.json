@@ -2,6 +2,9 @@
     "name": "archlinux-de/mediawiki-extensions-flarum_auth",
     "description": "Use Flarum accounts in MediaWiki",
     "license": "GPL-3.0-or-later",
+    "require": {
+        "php": "^8.0"
+    },
     "require-dev": {
         "ext-json": "*",
         "mediawiki/core": "dev-REL1_37",
