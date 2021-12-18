@@ -1,0 +1,27 @@
+{
+    "name": "archlinux-de/mediawiki-extensions-flarum_auth",
+    "description": "Use Flarum accounts in MediaWiki",
+    "license": "GPL-3.0-or-later",
+    "require-dev": {
+        "ext-json": "*",
+        "mediawiki/core": "dev-REL1_37",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.6",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.2",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MediaWiki\\Extensions\\FlarumAuth\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\MediaWiki\\Extensions\\FlarumAuth\\": "tests"
+        },
+        "classmap": ["vendor/mediawiki/core/includes/*"],
+        "files": ["vendor/mediawiki/core/includes/MediaWikiServices.php"]
+    }
+}

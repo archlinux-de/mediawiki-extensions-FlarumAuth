@@ -30,6 +30,7 @@ class FlarumUser
 
     public static function crateFromResponse(string $response): self
     {
+        /** @var array $data */
         $data = json_decode($response, true);
         return new FlarumUser(
             $data['data']['id'],

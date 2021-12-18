@@ -15,7 +15,7 @@ use User;
 
 class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthenticationProvider
 {
-    private FlarumUser $flarumUser;
+    private ?FlarumUser $flarumUser = null;
 
     public static function isValidPassword(string $password): bool
     {
@@ -24,10 +24,12 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
 
     private static function getFlarumUrl(): string
     {
-        return MediaWikiServices::getInstance()
+        $url = MediaWikiServices::getInstance()
             ->getConfigFactory()
             ->makeConfig('FlarumAuth')
             ->get('FlarumUrl');
+
+        return is_string($url) ? $url : '';
     }
 
     /**
@@ -41,7 +43,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
             return AuthenticationResponse::newAbstain();
         }
 
-        if ($req->username === null || $req->password === null) {
+        if (!($req instanceof PasswordAuthenticationRequest) || $req->username === null || $req->password === null) {
             return AuthenticationResponse::newAbstain();
         }
 
@@ -148,15 +150,19 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
      */
     public function postAuthentication($user, AuthenticationResponse $response): void
     {
-        if ($user && $response->status === AuthenticationResponse::PASS
-            && $this->flarumUser && $this->flarumUser->isEmailConfirmed()
-            && $response->username == $user->getName()) {
+        if (
+            $user
+            && $response->status === AuthenticationResponse::PASS
+            && $this->flarumUser
+            && $this->flarumUser->isEmailConfirmed()
+            && $response->username == $user->getName()
+        ) {
             $userUpdated = false;
 
             if ($user->getEmail() != $this->flarumUser->getEmail()) {
                 $userUpdated = true;
                 $user->setEmail($this->flarumUser->getEmail());
-                $user->setEmailAuthenticationTimestamp($this->flarumUser->getJoinTime()->getTimestamp());
+                $user->setEmailAuthenticationTimestamp((string)$this->flarumUser->getJoinTime()->getTimestamp());
             }
 
             if ($user->getRealName() != $this->flarumUser->getDisplayName()) {
