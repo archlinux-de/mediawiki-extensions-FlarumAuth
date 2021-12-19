@@ -4,6 +4,7 @@ namespace Tests\MediaWiki\Extensions\FlarumAuth;
 
 use BadMethodCallException;
 use ConfigFactory;
+use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -100,7 +101,7 @@ class FlarumAuthenticationProviderTest extends TestCase
                                                                                      'username' => 'bob',
                                                                                      'displayName' => 'Mr. Bob',
                                                                                      'email' => 'bob@localhost',
-                                                                                     'isEmailConfirmed' => '2021-12-02',
+                                                                                     'isEmailConfirmed' => true,
                                                                                      'joinTime' => '2021-12-01'
                                                                                  ]
                                                                              ]
@@ -189,6 +190,48 @@ class FlarumAuthenticationProviderTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('getRealName')
             ->willReturn('Mr. Bob');
+
+        $request = new PasswordAuthenticationRequest();
+        $request->username = 'bob';
+        $request->password = 'foobar';
+
+        $response = $this->flarumAuthenticationProvider->beginPrimaryAuthentication([$request]);
+        $this->flarumAuthenticationProvider->postAuthentication($user, $response);
+    }
+
+    public function testPostAuthenticationSavesUpdatedUserData(): void
+    {
+        $this->configureSuccessfulMockhandler();
+
+        $user = $this->createMock(User::class);
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn('Bob');
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('getEmail')
+            ->willReturn('bob.smith@localhost');
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('getRealName')
+            ->willReturn('Mr. Bob Smith');
+
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('setRealName')
+            ->with('Mr. Bob');
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('setEmail')
+            ->with('bob@localhost');
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('setEmailAuthenticationTimestamp')
+            ->with((new DateTime('2021-12-01'))->getTimestamp());
+        $user
+            ->expects($this->atLeastOnce())
+            ->method('saveSettings');
 
         $request = new PasswordAuthenticationRequest();
         $request->username = 'bob';
