@@ -1,12 +1,9 @@
-.PHONY: install-latest install-lowest test test-coverage
+.PHONY: install test test-coverage
 
 COMPOSER=composer --no-interaction
 
-install-latest:
+install:
 	${COMPOSER} update --prefer-stable
-
-install-lowest:
-	${COMPOSER} update --prefer-lowest
 
 test:
 	${COMPOSER} validate --strict --no-check-lock
