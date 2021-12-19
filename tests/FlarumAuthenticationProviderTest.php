@@ -21,9 +21,11 @@ class FlarumAuthenticationProviderTest extends TestCase
 {
     private FlarumAuthenticationProvider $flarumAuthenticationProvider;
 
-    private ConfigFactory|MockObject $configFactory;
+    /** @var ConfigFactory|MockObject */
+    private MockObject $configFactory;
 
-    private HttpRequestFactory|MockObject $httpRequestFactory;
+    /** @var HttpRequestFactory|MockObject */
+    private MockObject $httpRequestFactory;
 
     public function setUp(): void
     {
@@ -34,37 +36,8 @@ class FlarumAuthenticationProviderTest extends TestCase
             ->with('FlarumAuth')
             ->willReturn(new HashConfig(['FlarumUrl' => 'http://localhost']));
 
-        $mock = new MockHandler([
-                                    new Response(
-                                        body: (string)json_encode([
-                                                                      'userId' => 1234,
-                                                                      'token' => 'abcdef'
-                                                                  ])
-                                    ),
-                                    new Response(
-                                        body: (string)json_encode([
-                                                                      'data' => [
-                                                                          'id' => 1234,
-                                                                          'attributes' => [
-                                                                              'username' => 'bob',
-                                                                              'displayName' => 'Mr. Bob',
-                                                                              'email' => 'bob@localhost',
-                                                                              'isEmailConfirmed' => '2021-12-02',
-                                                                              'joinTime' => '2021-12-01'
-                                                                          ]
-                                                                      ]
-                                                                  ])
-                                    )
-                                ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
 
         $this->httpRequestFactory = $this->createMock(HttpRequestFactory::class);
-        $this->httpRequestFactory
-            ->expects($this->any())
-            ->method('createGuzzleClient')
-            ->willReturn($client);
 
         $this->flarumAuthenticationProvider = new FlarumAuthenticationProvider(
             $this->configFactory,
@@ -98,6 +71,8 @@ class FlarumAuthenticationProviderTest extends TestCase
 
     public function testBeginPrimaryAuthentication(): void
     {
+        $this->configureSuccessfulMockhandler();
+
         $request = new PasswordAuthenticationRequest();
         $request->username = 'bob';
         $request->password = 'foobar';
@@ -108,8 +83,99 @@ class FlarumAuthenticationProviderTest extends TestCase
         $this->assertEquals('Bob', $response->username);
     }
 
+    private function configureSuccessfulMockhandler(): void
+    {
+        $mockHandler = new MockHandler([
+                                           new Response(
+                                               body: (string)json_encode([
+                                                                             'userId' => 1234,
+                                                                             'token' => 'abcdef'
+                                                                         ])
+                                           ),
+                                           new Response(
+                                               body: (string)json_encode([
+                                                                             'data' => [
+                                                                                 'id' => 1234,
+                                                                                 'attributes' => [
+                                                                                     'username' => 'bob',
+                                                                                     'displayName' => 'Mr. Bob',
+                                                                                     'email' => 'bob@localhost',
+                                                                                     'isEmailConfirmed' => '2021-12-02',
+                                                                                     'joinTime' => '2021-12-01'
+                                                                                 ]
+                                                                             ]
+                                                                         ])
+                                           )
+                                       ]);
+
+        $this->configureMockHandler($mockHandler);
+    }
+
+    private function configureMockHandler(MockHandler $mockHandler): void
+    {
+        $handlerStack = HandlerStack::create($mockHandler);
+        $client = new Client(['handler' => $handlerStack]);
+
+        $this->httpRequestFactory
+            ->expects($this->any())
+            ->method('createGuzzleClient')
+            ->willReturn($client);
+    }
+
+    public function testAbstainWhenNoPasswordRequestIsProvided(): void
+    {
+        $response = $this->flarumAuthenticationProvider->beginPrimaryAuthentication([]);
+
+        $this->assertEquals(AuthenticationResponse::ABSTAIN, $response->status);
+    }
+
+    public function testAbstainWhenPasswordIsEmpty(): void
+    {
+        $request = new PasswordAuthenticationRequest();
+        $request->username = 'bob';
+
+        $response = $this->flarumAuthenticationProvider->beginPrimaryAuthentication([$request]);
+
+        $this->assertEquals(AuthenticationResponse::ABSTAIN, $response->status);
+    }
+
+    public function testAbstainWhenUsernameIsEmpty(): void
+    {
+        $request = new PasswordAuthenticationRequest();
+        $request->password = 'foobar';
+
+        $response = $this->flarumAuthenticationProvider->beginPrimaryAuthentication([$request]);
+
+        $this->assertEquals(AuthenticationResponse::ABSTAIN, $response->status);
+    }
+
+    public function testFailWithIncorrectPassword(): void
+    {
+        $this->configureUnsuccessfulMockhandler();
+
+        $request = new PasswordAuthenticationRequest();
+        $request->username = 'bob';
+        $request->password = 'foobar';
+
+        $response = $this->flarumAuthenticationProvider->beginPrimaryAuthentication([$request]);
+        $this->assertEquals(AuthenticationResponse::FAIL, $response->status);
+    }
+
+    private function configureUnsuccessfulMockhandler(): void
+    {
+        $mockHandler = new MockHandler([
+                                           new Response(
+                                               status: 401
+                                           )
+                                       ]);
+
+        $this->configureMockHandler($mockHandler);
+    }
+
     public function testPostAuthentication(): void
     {
+        $this->configureSuccessfulMockhandler();
+
         $user = $this->createMock(User::class);
         $user
             ->expects($this->atLeastOnce())

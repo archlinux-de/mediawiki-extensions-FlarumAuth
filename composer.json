@@ -26,6 +26,9 @@
         },
         "classmap": [
             "vendor/mediawiki/core/includes/*"
+        ],
+        "files": [
+            "tests/GlobalFunctionsMock.php"
         ]
     }
 }
