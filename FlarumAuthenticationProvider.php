@@ -2,6 +2,8 @@
 
 namespace MediaWiki\Extensions\FlarumAuth;
 
+use BadMethodCallException;
+use ConfigFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -9,7 +11,7 @@ use MediaWiki\Auth\AbstractPasswordPrimaryAuthenticationProvider;
 use MediaWiki\Auth\AuthenticationRequest;
 use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Http\HttpRequestFactory;
 use StatusValue;
 use User;
 
@@ -17,19 +19,31 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
 {
     private ?FlarumUser $flarumUser = null;
 
+    public function __construct(
+        private ConfigFactory $configFactory,
+        private HttpRequestFactory $httpRequestFactory,
+        array $params = []
+    ) {
+        parent::__construct($params);
+    }
+
     public static function isValidPassword(string $password): bool
     {
         return strlen($password) >= 8;
     }
 
-    private static function getFlarumUrl(): string
+    private function getFlarumUrl(): string
     {
-        $url = MediaWikiServices::getInstance()
-            ->getConfigFactory()
+        $url = $this->configFactory
             ->makeConfig('FlarumAuth')
             ->get('FlarumUrl');
 
         return is_string($url) ? $url : '';
+    }
+
+    private function createClient(): Client
+    {
+        return $this->httpRequestFactory->createGuzzleClient(['base_uri' => $this->getFlarumUrl()]);
     }
 
     /**
@@ -47,11 +61,11 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
             return AuthenticationResponse::newAbstain();
         }
 
-        $client = MediaWikiServices::getInstance()->getHttpRequestFactory()->createGuzzleClient();
+        $client = $this->createClient();
         try {
             $res = $client->request(
                 'POST',
-                self::getFlarumUrl() . '/api/token',
+                '/api/token',
                 [
                     'json' => ['identification' => $req->username, 'password' => $req->password]
                 ]
@@ -66,7 +80,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         try {
             $res = $client->request(
                 'GET',
-                self::getFlarumUrl() . '/api/users/' . $flarumUserToken->getId(),
+                '/api/users/' . $flarumUserToken->getId(),
                 [
                     'headers' => [
                         'accept' => 'application/json',
@@ -116,7 +130,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
 
     public function providerChangeAuthenticationData(AuthenticationRequest $req): void
     {
-        throw new \BadMethodCallException(__METHOD__ . ' is not implemented.');
+        throw new BadMethodCallException(__METHOD__ . ' is not implemented.');
     }
 
     public function accountCreationType(): string

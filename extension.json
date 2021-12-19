@@ -23,7 +23,14 @@
   "AuthManagerAutoConfig": {
     "primaryauth": {
       "FlarumAuthenticationProvider": {
-        "class": "MediaWiki\\Extensions\\FlarumAuth\\FlarumAuthenticationProvider"
+        "class": "MediaWiki\\Extensions\\FlarumAuth\\FlarumAuthenticationProvider",
+        "services": [
+          "ConfigFactory",
+          "HttpRequestFactory"
+        ],
+        "args": [{
+          "authoritative": true
+        }]
       }
     }
   },

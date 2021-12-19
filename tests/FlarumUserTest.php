@@ -2,8 +2,11 @@
 
 namespace Tests\MediaWiki\Extensions\FlarumAuth;
 
+use DateTime;
 use MediaWiki\Extensions\FlarumAuth\FlarumUser;
 use PHPUnit\Framework\TestCase;
+
+use const DATE_ISO8601;
 
 class FlarumUserTest extends TestCase
 {
@@ -18,7 +21,7 @@ class FlarumUserTest extends TestCase
                                             'displayName' => 'Mr. Name',
                                             'email' => 'foo@localhost',
                                             'isEmailConfirmed' => true,
-                                            'joinTime' => (new \DateTime('2021-01-01'))->format(\DATE_ISO8601)
+                                            'joinTime' => (new DateTime('2021-01-01'))->format(DATE_ISO8601)
                                         ]
                                     ]
                                 ])
@@ -29,6 +32,6 @@ class FlarumUserTest extends TestCase
         $this->assertEquals('Mr. Name', $flarumUser->getDisplayName());
         $this->assertEquals('foo@localhost', $flarumUser->getEmail());
         $this->assertEquals(true, $flarumUser->isEmailConfirmed());
-        $this->assertEquals(new \DateTime('2021-01-01'), $flarumUser->getJoinTime());
+        $this->assertEquals(new DateTime('2021-01-01'), $flarumUser->getJoinTime());
     }
 }

@@ -24,7 +24,8 @@
         "psr-4": {
             "Tests\\MediaWiki\\Extensions\\FlarumAuth\\": "tests"
         },
-        "classmap": ["vendor/mediawiki/core/includes/*"],
-        "files": ["vendor/mediawiki/core/includes/MediaWikiServices.php"]
+        "classmap": [
+            "vendor/mediawiki/core/includes/*"
+        ]
     }
 }
