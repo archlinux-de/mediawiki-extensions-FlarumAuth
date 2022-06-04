@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [8.0, 8.1]
+        php-version: [8.1]
     name: PHP ${{ matrix.php-version }}
     steps:
       - uses: actions/checkout@master
@@ -18,7 +18,11 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: mbstring
+          extensions: mbstring, calendar
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install packages
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make install
       - run: make test
