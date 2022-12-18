@@ -21,6 +21,12 @@ jobs:
           extensions: mbstring, calendar
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Maintain Composer cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.json') }}
+          restore-keys: composer-
       - name: Install packages
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
