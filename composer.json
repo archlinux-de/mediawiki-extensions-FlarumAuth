@@ -8,7 +8,7 @@
     "require-dev": {
         "ext-json": "*",
         "mediawiki/core": "dev-REL1_39",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.1",
         "squizlabs/php_codesniffer": "^3.7",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1.9",
