@@ -14,6 +14,7 @@ use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Extensions\FlarumAuth\FlarumAuthenticationProvider;
 use MediaWiki\Http\HttpRequestFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use User;
@@ -47,15 +48,13 @@ class FlarumAuthenticationProviderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider providePasswords
-     */
+    #[DataProvider('providePasswords')]
     public function testIsValidPassword(string $password, bool $valid): void
     {
         $this->assertEquals($valid, FlarumAuthenticationProvider::isValidPassword($password));
     }
 
-    public function providePasswords(): array
+    public static function providePasswords(): array
     {
         return [
             ['', false],
