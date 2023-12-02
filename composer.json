@@ -41,12 +41,6 @@
             "phpstan/extension-installer": true
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/wikimedia/mediawiki"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }
