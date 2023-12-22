@@ -3,13 +3,13 @@
 namespace Tests\MediaWiki\Extensions\FlarumAuth;
 
 use BadMethodCallException;
-use ConfigFactory;
+use MediaWiki\Config\ConfigFactory;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use HashConfig;
+use MediaWiki\Config\HashConfig;
 use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Extensions\FlarumAuth\FlarumAuthenticationProvider;
@@ -17,7 +17,7 @@ use MediaWiki\Http\HttpRequestFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use User;
+use MediaWiki\User\User;
 
 class FlarumAuthenticationProviderTest extends TestCase
 {

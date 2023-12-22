@@ -3,7 +3,7 @@
 namespace MediaWiki\Extensions\FlarumAuth;
 
 use BadMethodCallException;
-use ConfigFactory;
+use MediaWiki\Config\ConfigFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -13,7 +13,7 @@ use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Http\HttpRequestFactory;
 use StatusValue;
-use User;
+use MediaWiki\User\User;
 
 class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthenticationProvider
 {
