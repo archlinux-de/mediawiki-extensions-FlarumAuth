@@ -22,7 +22,7 @@ jobs:
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Maintain Composer cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: composer-${{ hashFiles('composer.json') }}
