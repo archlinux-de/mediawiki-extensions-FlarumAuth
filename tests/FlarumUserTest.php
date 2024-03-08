@@ -6,8 +6,6 @@ use DateTime;
 use MediaWiki\Extensions\FlarumAuth\FlarumUser;
 use PHPUnit\Framework\TestCase;
 
-use const DATE_ISO8601;
-
 class FlarumUserTest extends TestCase
 {
     public function testCrateFromResponse(): void
@@ -21,7 +19,7 @@ class FlarumUserTest extends TestCase
                                             'displayName' => 'Mr. Name',
                                             'email' => 'foo@localhost',
                                             'isEmailConfirmed' => true,
-                                            'joinTime' => (new DateTime('2021-01-01'))->format(DATE_ISO8601)
+                                            'joinTime' => (new DateTime('2021-01-01'))->format(\DATE_ATOM)
                                         ]
                                     ]
                                 ])
