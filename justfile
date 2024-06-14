@@ -1,4 +1,7 @@
-COMPOSER := 'composer --no-interaction'
+COMPOSER := 'COMPOSER_CACHE_DIR=.cache/composer composer --no-interaction'
+
+composer *args:
+    {{COMPOSER}} {{args}}
 
 install:
 	{{COMPOSER}} update --prefer-stable
