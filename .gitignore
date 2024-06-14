@@ -4,3 +4,5 @@
 /.phpunit.result.cache
 /coverage/
 /phpunit.xml.dist.bak
+/.cache/composer/*
+!/.cache/composer/.gitkeep

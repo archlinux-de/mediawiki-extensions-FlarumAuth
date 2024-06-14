@@ -2,33 +2,17 @@
 
 namespace MediaWiki\Extensions\FlarumAuth;
 
-use DateTime;
-
-class FlarumUser
+readonly class FlarumUser
 {
-    private int $id;
-    private string $userName;
-    private string $displayName;
-    private string $email;
-    private bool $isEmailConfirmed;
-    private DateTime $joinTime;
-
     public function __construct(
-        int $id,
-        string $userName,
-        string $displayName,
-        string $email,
-        bool $isEmailConfirmed,
-        DateTime $joinTime
+        private int $id,
+        private string $userName,
+        private string $displayName,
+        private string $email,
+        private bool $isEmailConfirmed,
+        private \DateTime $joinTime
     ) {
-        $this->id = $id;
-        $this->userName = $userName;
-        $this->displayName = $displayName;
-        $this->email = $email;
-        $this->isEmailConfirmed = $isEmailConfirmed;
-        $this->joinTime = $joinTime;
     }
-
 
     public static function crateFromResponse(string $response): self
     {
@@ -40,7 +24,7 @@ class FlarumUser
             $data['data']['attributes']['displayName'],
             $data['data']['attributes']['email'],
             $data['data']['attributes']['isEmailConfirmed'],
-            new DateTime($data['data']['attributes']['joinTime'])
+            new \DateTime($data['data']['attributes']['joinTime'])
         );
     }
 
@@ -69,7 +53,7 @@ class FlarumUser
         return $this->isEmailConfirmed;
     }
 
-    public function getJoinTime(): DateTime
+    public function getJoinTime(): \DateTime
     {
         return $this->joinTime;
     }

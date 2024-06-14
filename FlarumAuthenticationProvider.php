@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extensions\FlarumAuth;
 
-use BadMethodCallException;
 use MediaWiki\Config\ConfigFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -12,16 +11,14 @@ use MediaWiki\Auth\AuthenticationRequest;
 use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Http\HttpRequestFactory;
-use StatusValue;
-use MediaWiki\User\User;
 
 class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthenticationProvider
 {
     private ?FlarumUser $flarumUser = null;
 
     public function __construct(
-        private ConfigFactory $configFactory,
-        private HttpRequestFactory $httpRequestFactory,
+        private readonly ConfigFactory $configFactory,
+        private readonly HttpRequestFactory $httpRequestFactory,
         array $params = []
     ) {
         parent::__construct($params);
@@ -46,10 +43,6 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         return $this->httpRequestFactory->createGuzzleClient(['base_uri' => $this->getFlarumUrl()]);
     }
 
-    /**
-     * @param PasswordAuthenticationRequest[] $reqs
-     * @return AuthenticationResponse
-     */
     public function beginPrimaryAuthentication(array $reqs): AuthenticationResponse
     {
         $req = AuthenticationRequest::getRequestByClass($reqs, PasswordAuthenticationRequest::class);
@@ -108,29 +101,19 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         return strtoupper(substr($username, 0, 1)) . substr($username, 1);
     }
 
-    /**
-     * @param string $username
-     * @param int $flags
-     * @return bool
-     */
-    public function testUserExists($username, $flags = User::READ_NORMAL): bool
+    public function testUserExists($username, $flags = \IDBAccessObject::READ_NORMAL): bool
     {
         return false;
     }
 
-    /**
-     * @param AuthenticationRequest $req
-     * @param bool $checkData
-     * @return StatusValue
-     */
-    public function providerAllowsAuthenticationDataChange(AuthenticationRequest $req, $checkData = true): StatusValue
+    public function providerAllowsAuthenticationDataChange(AuthenticationRequest $req, $checkData = true): \StatusValue
     {
-        return StatusValue::newFatal('authentication data cannot be changed');
+        return \StatusValue::newFatal('authentication data cannot be changed');
     }
 
     public function providerChangeAuthenticationData(AuthenticationRequest $req): void
     {
-        throw new BadMethodCallException(__METHOD__ . ' is not implemented.');
+        throw new \BadMethodCallException(__METHOD__ . ' is not implemented.');
     }
 
     public function accountCreationType(): string
@@ -138,30 +121,16 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         return self::TYPE_CREATE;
     }
 
-    /**
-     * @param User $user
-     * @param User $creator
-     * @param AuthenticationRequest[] $reqs
-     * @return AuthenticationResponse
-     */
     public function beginPrimaryAccountCreation($user, $creator, array $reqs): AuthenticationResponse
     {
         return AuthenticationResponse::newAbstain();
     }
 
-    /**
-     * @param string $property
-     * @return bool
-     */
     public function providerAllowsPropertyChange($property): bool
     {
         return false;
     }
 
-    /**
-     * @param User|null $user
-     * @param AuthenticationResponse $response
-     */
     public function postAuthentication($user, AuthenticationResponse $response): void
     {
         if (

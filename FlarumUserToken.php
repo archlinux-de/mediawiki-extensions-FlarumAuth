@@ -2,15 +2,10 @@
 
 namespace MediaWiki\Extensions\FlarumAuth;
 
-class FlarumUserToken
+readonly class FlarumUserToken
 {
-    private int $id;
-    private string $token;
-
-    public function __construct(int $id, string $token)
+    public function __construct(private int $id, private string $token)
     {
-        $this->id = $id;
-        $this->token = $token;
     }
 
     public static function crateFromResponse(string $response): self

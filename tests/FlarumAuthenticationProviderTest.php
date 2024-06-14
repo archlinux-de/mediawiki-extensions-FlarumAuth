@@ -2,9 +2,7 @@
 
 namespace Tests\MediaWiki\Extensions\FlarumAuth;
 
-use BadMethodCallException;
 use MediaWiki\Config\ConfigFactory;
-use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -23,11 +21,9 @@ class FlarumAuthenticationProviderTest extends TestCase
 {
     private FlarumAuthenticationProvider $flarumAuthenticationProvider;
 
-    /** @var ConfigFactory|MockObject */
-    private MockObject $configFactory;
+    private ConfigFactory&MockObject $configFactory;
 
-    /** @var HttpRequestFactory|MockObject */
-    private MockObject $httpRequestFactory;
+    private HttpRequestFactory&MockObject $httpRequestFactory;
 
     public function setUp(): void
     {
@@ -71,7 +67,7 @@ class FlarumAuthenticationProviderTest extends TestCase
 
     public function testBeginPrimaryAuthentication(): void
     {
-        $this->configureSuccessfulMockhandler();
+        $this->configureSuccessfulMockHandler();
 
         $request = new PasswordAuthenticationRequest();
         $request->username = 'bob';
@@ -83,7 +79,7 @@ class FlarumAuthenticationProviderTest extends TestCase
         $this->assertEquals('Bob', $response->username);
     }
 
-    private function configureSuccessfulMockhandler(): void
+    private function configureSuccessfulMockHandler(): void
     {
         $mockHandler = new MockHandler([
                                            new Response(
@@ -151,7 +147,7 @@ class FlarumAuthenticationProviderTest extends TestCase
 
     public function testFailWithIncorrectPassword(): void
     {
-        $this->configureUnsuccessfulMockhandler();
+        $this->configureUnsuccessfulMockHandler();
 
         $request = new PasswordAuthenticationRequest();
         $request->username = 'bob';
@@ -161,7 +157,7 @@ class FlarumAuthenticationProviderTest extends TestCase
         $this->assertEquals(AuthenticationResponse::FAIL, $response->status);
     }
 
-    private function configureUnsuccessfulMockhandler(): void
+    private function configureUnsuccessfulMockHandler(): void
     {
         $mockHandler = new MockHandler([
                                            new Response(
@@ -174,7 +170,7 @@ class FlarumAuthenticationProviderTest extends TestCase
 
     public function testPostAuthentication(): void
     {
-        $this->configureSuccessfulMockhandler();
+        $this->configureSuccessfulMockHandler();
 
         $user = $this->createMock(User::class);
         $user
@@ -200,7 +196,7 @@ class FlarumAuthenticationProviderTest extends TestCase
 
     public function testPostAuthenticationSavesUpdatedUserData(): void
     {
-        $this->configureSuccessfulMockhandler();
+        $this->configureSuccessfulMockHandler();
 
         $user = $this->createMock(User::class);
         $user
@@ -227,7 +223,7 @@ class FlarumAuthenticationProviderTest extends TestCase
         $user
             ->expects($this->atLeastOnce())
             ->method('setEmailAuthenticationTimestamp')
-            ->with((new DateTime('2021-12-01'))->getTimestamp());
+            ->with((new \DateTime('2021-12-01'))->getTimestamp());
         $user
             ->expects($this->atLeastOnce())
             ->method('saveSettings');
@@ -251,7 +247,7 @@ class FlarumAuthenticationProviderTest extends TestCase
 
     public function testProviderChangeAuthenticationData(): void
     {
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(\BadMethodCallException::class);
         $this->flarumAuthenticationProvider->providerChangeAuthenticationData(new PasswordAuthenticationRequest());
     }
 
