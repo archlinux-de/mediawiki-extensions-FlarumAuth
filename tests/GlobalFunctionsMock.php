@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Auth;
 
-use Message;
+use MediaWiki\Message\Message;
 use MessageSpecifier;
 
 /** @See ../vendor/mediawiki/core/includes/GlobalFunctions.php */
