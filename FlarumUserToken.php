@@ -10,7 +10,7 @@ readonly class FlarumUserToken
 
     public static function crateFromResponse(string $response): self
     {
-        /** @var array $data */
+        /** @var array{userId: int, token: string} $data */
         $data = json_decode($response, true);
         return new FlarumUserToken($data['userId'], $data['token']);
     }

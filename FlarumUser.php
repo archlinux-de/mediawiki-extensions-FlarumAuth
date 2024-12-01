@@ -16,7 +16,7 @@ readonly class FlarumUser
 
     public static function crateFromResponse(string $response): self
     {
-        /** @var array $data */
+        /** @var array{data: array{id: int, attributes: array{username: string, displayName: string, email: string, isEmailConfirmed: boolean, joinTime: string}}} $data */
         $data = json_decode($response, true);
         return new FlarumUser(
             $data['data']['id'],

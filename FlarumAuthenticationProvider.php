@@ -50,7 +50,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
             return AuthenticationResponse::newAbstain();
         }
 
-        if (!($req instanceof PasswordAuthenticationRequest) || $req->username === null || $req->password === null) {
+        if ($req->username === null || $req->password === null) {
             return AuthenticationResponse::newAbstain();
         }
 
