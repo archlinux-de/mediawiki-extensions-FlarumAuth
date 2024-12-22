@@ -11,6 +11,7 @@ use MediaWiki\Auth\AuthenticationRequest;
 use MediaWiki\Auth\AuthenticationResponse;
 use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Http\HttpRequestFactory;
+use Wikimedia\Rdbms\IDBAccessObject;
 
 class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthenticationProvider
 {
@@ -101,7 +102,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         return strtoupper(substr($username, 0, 1)) . substr($username, 1);
     }
 
-    public function testUserExists($username, $flags = \IDBAccessObject::READ_NORMAL): bool
+    public function testUserExists($username, $flags = IDBAccessObject::READ_NORMAL): bool
     {
         return false;
     }
