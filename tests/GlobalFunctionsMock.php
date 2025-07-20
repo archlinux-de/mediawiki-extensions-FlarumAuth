@@ -9,7 +9,7 @@ use Wikimedia\Message\MessageSpecifier;
 /**
  * @See ../vendor/mediawiki/core/includes/GlobalFunctions.php
  * @param string|string[]|MessageSpecifier $key
- * @param MessageParam|MessageSpecifier|string|int|float|array ...$params
+ * @param float|int|list<float|int|string|MessageParam|MessageSpecifier>|string|MessageParam|MessageSpecifier ...$params
  */
 function wfMessage(string|array|MessageSpecifier $key, mixed ...$params): Message
 {

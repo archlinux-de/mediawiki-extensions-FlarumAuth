@@ -50,6 +50,9 @@ class FlarumAuthenticationProviderTest extends TestCase
         $this->assertEquals($valid, FlarumAuthenticationProvider::isValidPassword($password));
     }
 
+    /**
+     * @return list<array<string|bool>>
+     */
     public static function providePasswords(): array
     {
         return [

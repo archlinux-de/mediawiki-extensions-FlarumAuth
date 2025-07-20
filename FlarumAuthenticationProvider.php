@@ -17,6 +17,9 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
 {
     private ?FlarumUser $flarumUser = null;
 
+    /**
+     * @param array<string, mixed> $params
+     */
     public function __construct(
         private readonly ConfigFactory $configFactory,
         private readonly HttpRequestFactory $httpRequestFactory,
@@ -47,7 +50,7 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
     public function beginPrimaryAuthentication(array $reqs): AuthenticationResponse
     {
         $req = AuthenticationRequest::getRequestByClass($reqs, PasswordAuthenticationRequest::class);
-        if (!$req) {
+        if (!$req instanceof PasswordAuthenticationRequest) {
             return AuthenticationResponse::newAbstain();
         }
 
