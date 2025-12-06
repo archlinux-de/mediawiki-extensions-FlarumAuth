@@ -110,6 +110,9 @@ class FlarumAuthenticationProvider extends AbstractPasswordPrimaryAuthentication
         return false;
     }
 
+    /**
+     * @return \StatusValue<string>
+     */
     public function providerAllowsAuthenticationDataChange(AuthenticationRequest $req, $checkData = true): \StatusValue
     {
         return \StatusValue::newFatal('authentication data cannot be changed');

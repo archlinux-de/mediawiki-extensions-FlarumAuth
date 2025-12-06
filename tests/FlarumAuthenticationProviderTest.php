@@ -13,7 +13,7 @@ use MediaWiki\Auth\PasswordAuthenticationRequest;
 use MediaWiki\Extensions\FlarumAuth\FlarumAuthenticationProvider;
 use MediaWiki\Http\HttpRequestFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use MediaWiki\User\User;
 
@@ -21,21 +21,20 @@ class FlarumAuthenticationProviderTest extends TestCase
 {
     private FlarumAuthenticationProvider $flarumAuthenticationProvider;
 
-    private ConfigFactory&MockObject $configFactory;
+    private ConfigFactory&Stub $configFactory;
 
-    private HttpRequestFactory&MockObject $httpRequestFactory;
+    private HttpRequestFactory&Stub $httpRequestFactory;
 
     public function setUp(): void
     {
-        $this->configFactory = $this->createMock(ConfigFactory::class);
+        $this->configFactory = $this->createStub(ConfigFactory::class);
         $this->configFactory
-            ->expects($this->any())
             ->method('makeConfig')
             ->with('FlarumAuth')
             ->willReturn(new HashConfig(['FlarumUrl' => 'http://localhost']));
 
 
-        $this->httpRequestFactory = $this->createMock(HttpRequestFactory::class);
+        $this->httpRequestFactory = $this->createStub(HttpRequestFactory::class);
 
         $this->flarumAuthenticationProvider = new FlarumAuthenticationProvider(
             $this->configFactory,
@@ -116,7 +115,6 @@ class FlarumAuthenticationProviderTest extends TestCase
         $client = new Client(['handler' => $handlerStack]);
 
         $this->httpRequestFactory
-            ->expects($this->any())
             ->method('createGuzzleClient')
             ->willReturn($client);
     }
@@ -264,8 +262,8 @@ class FlarumAuthenticationProviderTest extends TestCase
         $this->assertEquals(
             AuthenticationResponse::ABSTAIN,
             $this->flarumAuthenticationProvider->beginPrimaryAccountCreation(
-                $this->createMock(User::class),
-                $this->createMock(User::class),
+                $this->createStub(User::class),
+                $this->createStub(User::class),
                 [new PasswordAuthenticationRequest()]
             )->status
         );
