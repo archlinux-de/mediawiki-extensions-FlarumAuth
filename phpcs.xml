@@ -3,5 +3,6 @@
     <arg name="extensions" value="php" />
     <file>.</file>
     <exclude-pattern>/vendor/*</exclude-pattern>
+    <exclude-pattern>/maintenance/*</exclude-pattern>
     <rule ref="PSR12"/>
 </ruleset>

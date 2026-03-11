@@ -4,5 +4,6 @@ parameters:
 		- .
 	excludePaths:
 		- vendor
+		- maintenance
 	bootstrapFiles:
 		- vendor/autoload.php
