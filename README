@@ -8,3 +8,22 @@ Enable this extension by adding this to LocalSettings.php:
 Define the Flarum URL:
 
     $wgFlarumUrl = 'https://flarum.example.com';
+
+Purging deleted Flarum users
+----------------------------
+
+When a user is deleted from Flarum, their MediaWiki account persists. The
+PurgeFlarumUsers maintenance script finds these orphaned accounts, merges their
+contributions into the Anonymous user and then deletes the account.
+
+The script uses the public Flarum REST API to check if users still exist. No API
+key is needed as the GET endpoint for user profiles is accessible without
+authentication.
+
+Run the script:
+
+    php maintenance/run.php extensions/FlarumAuth/maintenance/PurgeFlarumUsers.php
+
+Use --dry-run to list users that would be purged without making changes:
+
+    php maintenance/run.php extensions/FlarumAuth/maintenance/PurgeFlarumUsers.php --dry-run

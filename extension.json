@@ -10,7 +10,9 @@
   "AutoloadClasses": {
     "MediaWiki\\Extensions\\FlarumAuth\\FlarumAuthenticationProvider": "FlarumAuthenticationProvider.php",
     "MediaWiki\\Extensions\\FlarumAuth\\FlarumUser": "FlarumUser.php",
-    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserToken": "FlarumUserToken.php"
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserToken": "FlarumUserToken.php",
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserLookup": "FlarumUserLookup.php",
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserPurger": "FlarumUserPurger.php"
   },
   "ConfigRegistry": {
     "FlarumAuth": "GlobalVarConfig::newInstance"

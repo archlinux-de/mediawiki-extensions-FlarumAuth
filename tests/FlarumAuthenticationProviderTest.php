@@ -30,9 +30,7 @@ class FlarumAuthenticationProviderTest extends TestCase
         $this->configFactory = $this->createStub(ConfigFactory::class);
         $this->configFactory
             ->method('makeConfig')
-            ->with('FlarumAuth')
             ->willReturn(new HashConfig(['FlarumUrl' => 'http://localhost']));
-
 
         $this->httpRequestFactory = $this->createStub(HttpRequestFactory::class);
 
