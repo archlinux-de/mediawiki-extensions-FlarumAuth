@@ -37,8 +37,8 @@ class PurgeFlarumUsers extends Maintenance {
 		$userFactory = $services->getUserFactory();
 
 		$anonymousUser = $userFactory->newFromName( 'Anonymous' );
-		if ( !$anonymousUser || $anonymousUser->getId() === 0 ) {
-			$this->fatalError( 'Anonymous user does not exist, cannot merge users' );
+		if ( !$anonymousUser ) {
+			$this->fatalError( 'Could not create Anonymous user object' );
 		}
 
 		$client = $services->getHttpRequestFactory()
@@ -78,6 +78,7 @@ class PurgeFlarumUsers extends Maintenance {
 				$um->merge( $performer, __METHOD__ );
 				$um->delete( $performer, fn ( ...$args ) => wfMessage( ...$args ) );
 			},
+			$this->getSystemUsernames( $services ),
 		);
 
 		$dryRun = $this->hasOption( 'dry-run' );
@@ -91,6 +92,30 @@ class PurgeFlarumUsers extends Maintenance {
 		$this->output(
 			"\n{$prefix}Done. Purged: {$result['purged']}, Skipped: {$result['skipped']}, Errors: {$result['errors']}\n"
 		);
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	private function getSystemUsernames( MediaWikiServices $services ): array {
+		$userFactory = $services->getUserFactory();
+		$dbr = $services->getConnectionProvider()->getReplicaDatabase();
+		$names = [];
+
+		$res = $dbr->newSelectQueryBuilder()
+			->select( [ 'user_id', 'user_name' ] )
+			->from( 'user' )
+			->caller( __METHOD__ )
+			->fetchResultSet();
+
+		foreach ( $res as $row ) {
+			$user = $userFactory->newFromId( (int)$row->user_id );
+			if ( $user->isSystemUser() ) {
+				$names[] = $row->user_name;
+			}
+		}
+
+		return $names;
 	}
 }
 

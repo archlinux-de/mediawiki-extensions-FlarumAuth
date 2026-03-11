@@ -12,7 +12,8 @@
     "MediaWiki\\Extensions\\FlarumAuth\\FlarumUser": "FlarumUser.php",
     "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserToken": "FlarumUserToken.php",
     "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserLookup": "FlarumUserLookup.php",
-    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserPurger": "FlarumUserPurger.php"
+    "MediaWiki\\Extensions\\FlarumAuth\\FlarumUserPurger": "FlarumUserPurger.php",
+    "PurgeFlarumUsers": "maintenance/PurgeFlarumUsers.php"
   },
   "ConfigRegistry": {
     "FlarumAuth": "GlobalVarConfig::newInstance"

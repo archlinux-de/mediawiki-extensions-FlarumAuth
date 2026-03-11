@@ -13,10 +13,14 @@ class FlarumUserPurger
     /**
      * @param Closure(int): void $mergeAndDeleteUser Callable that merges and deletes a user by ID
      */
+    /**
+     * @param list<string> $excludeUsernames Usernames to skip (e.g. system users)
+     */
     public function __construct(
         private readonly FlarumUserLookup $lookup,
         private readonly IConnectionProvider $connectionProvider,
         Closure $mergeAndDeleteUser,
+        private readonly array $excludeUsernames = [],
     ) {
         $this->mergeAndDeleteUser = $mergeAndDeleteUser;
     }
@@ -44,6 +48,11 @@ class FlarumUserPurger
         /** @var object{user_id: int, user_name: string} $row */
         foreach ($res as $row) {
             $wikiUsername = $row->user_name;
+
+            if (in_array($wikiUsername, $this->excludeUsernames, true)) {
+                $skipped++;
+                continue;
+            }
 
             $exists = $this->lookup->exists($wikiUsername);
 
