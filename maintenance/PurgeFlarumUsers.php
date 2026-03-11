@@ -37,8 +37,8 @@ class PurgeFlarumUsers extends Maintenance {
 		$userFactory = $services->getUserFactory();
 
 		$anonymousUser = $userFactory->newFromName( 'Anonymous' );
-		if ( !$anonymousUser || $anonymousUser->getId() === 0 ) {
-			$this->fatalError( 'Anonymous user does not exist, cannot merge users' );
+		if ( !$anonymousUser ) {
+			$this->fatalError( 'Could not create Anonymous user object' );
 		}
 
 		$client = $services->getHttpRequestFactory()
