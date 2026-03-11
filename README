@@ -22,8 +22,8 @@ authentication.
 
 Run the script:
 
-    php maintenance/run.php extensions/FlarumAuth/maintenance/PurgeFlarumUsers.php
+    php maintenance/run.php PurgeFlarumUsers
 
 Use --dry-run to list users that would be purged without making changes:
 
-    php maintenance/run.php extensions/FlarumAuth/maintenance/PurgeFlarumUsers.php --dry-run
+    php maintenance/run.php PurgeFlarumUsers --dry-run
