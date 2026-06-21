@@ -35,6 +35,9 @@
         "allow-plugins": {
             "wikimedia/composer-merge-plugin": false,
             "phpstan/extension-installer": true
+        },
+        "audit": {
+            "block-insecure": false
         }
     },
     "minimum-stability": "dev",
