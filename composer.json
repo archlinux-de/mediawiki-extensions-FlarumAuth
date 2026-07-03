@@ -7,7 +7,7 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "mediawiki/core": "^1.45",
+        "mediawiki/core": "^1.46",
         "phpunit/phpunit": "^12.2",
         "squizlabs/php_codesniffer": "^4.0",
         "phpstan/extension-installer": "^1.4",
